@@ -1,0 +1,83 @@
+{
+  "BlockFilterSettings": {
+    "IsEnabled": true,
+    "Items": [],
+    "PredefinedFilters": {
+      "Seagrass": false,
+      "Grass": false,
+      "Flowers": false,
+      "Vine": false,
+      "Leaves": false,
+      "TreeLogs": false,
+      "Flora": false,
+      "Water": false,
+      "Lava": false,
+      "Snow": false,
+      "Ice": false,
+      "Artificial": false,
+      "Natural": false,
+      "Torch": false,
+      "Technical": false
+    },
+    "QuickFilterText": null
+  },
+  "BlockHighlightSettings": {
+    "IsEnabled": false,
+    "Items": []
+  },
+  "DataPackSettings": {
+    "IsEnabled": true,
+    "LoadBiomeFoliageTint": true,
+    "LoadBiomeGrassTint": true,
+    "LoadBiomeWaterTint": true
+  },
+  "RendererSettings": {
+    "AltitudeMax": null,
+    "AltitudeMin": null,
+    "AltitudeMountain": null,
+    "AltitudeSea": null,
+    "FlatGrass": false,
+    "InhabitedChunksOnly": false,
+    "NightMode": true,
+    "Shadows": false,
+    "ShadowStrength": 40.0,
+    "SunAltitudeAngle": 45.0,
+    "SunDirectionAngle": 120.0,
+    "TransparentUnderground": true,
+    "UnknownBlocksAs": null,
+    "WaterBlendingFadeRange": 12,
+    "WaterBlendingFadeStart": 0,
+    "WaterBlendingStrength": 30.0,
+    "WaterDarkeningRange": 40,
+    "WaterDarkeningStart": 0,
+    "WaterDarkeningStrength": 50.0,
+    "WaterShadingFadeRange": 60,
+    "WaterShadingFadeStart": 0,
+    "WaterShadingStrength": 50.0,
+    "WaterVisibilityRange": 16
+  },
+  "SlicerSettings": {
+    "BottomY": null,
+    "TopY": null,
+    "UseBottomY": false,
+    "UseTopY": false,
+    "UseUndergroundXRay": false
+  },
+  "StylesheetSettings": {
+    "Settings": {
+      "biomeColoring": "true",
+      "biomeColoringOcean": "true",
+      "biomeColoringSavanna": "true",
+      "biomeColoringTaiga": "true",
+      "biomeColoringSwamp": "true",
+      "biomeColoringBadlands": "true",
+      "coralColoring": "true",
+      "dyeColoring": "true",
+      "flowerColoring": "true",
+      "myceliumColoring": "true",
+      "oreColoring": "true",
+      "useUnderground": "true",
+      "useLandElevationGradient": "true"
+    }
+  }
+}
