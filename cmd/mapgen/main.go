@@ -3,7 +3,7 @@ package main
 func main() {
 
 	worldPath := "C://dev//go//minecraft-mapper//World_of_Duane//"
-	outputPath := "C://dev//go//minecraft-mapper//test//"
+	outputPath := "C://dev//go//minecraft-mapper//test//site//"
 	GenerateMaps(worldPath, outputPath)
 	// DeleteMapsDirectory(outputPath)
 }
