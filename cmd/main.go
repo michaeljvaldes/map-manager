@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"minecraftmapper/pkg/mapdeploy"
-	"minecraftmapper/pkg/mapgen"
-	"minecraftmapper/pkg/mapprep"
+	"minecraftmapper/internal/mapdeploy"
+	"minecraftmapper/internal/mapgen"
+	"minecraftmapper/internal/mapprep"
 	"os"
 	"path/filepath"
 )
