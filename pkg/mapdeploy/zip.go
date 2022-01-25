@@ -1,4 +1,4 @@
-package main
+package mapdeploy
 
 import (
 	"archive/zip"

@@ -1,4 +1,3 @@
-module minecraft-mapper
+module minecraftmapper
 
 go 1.17
-

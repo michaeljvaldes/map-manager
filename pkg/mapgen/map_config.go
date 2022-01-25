@@ -1,4 +1,4 @@
-package main
+package mapgen
 
 type MapConfig struct {
 	Name      string

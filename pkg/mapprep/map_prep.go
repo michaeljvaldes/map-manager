@@ -1,4 +1,4 @@
-package main
+package mapprep
 
 import (
 	"embed"
@@ -9,21 +9,11 @@ import (
 	"path"
 )
 
-/*
-take directory of map folders
-turn into one html site with 4 links
-zip
-return zip file path
-*/
-
 //go:embed "assets/*"
 var assets embed.FS
 
-func PrepareMaps(baseDirectory string) string {
+func PrepareMaps(baseDirectory string) {
 	copyAssets(baseDirectory)
-	zipFile := "../../test/site.zip"
-	ZipFolder(baseDirectory, zipFile)
-	return ""
 }
 
 func copyAssets(baseDirectory string) error {
@@ -33,9 +23,12 @@ func copyAssets(baseDirectory string) error {
 func copyDir(src string, dst string) error {
 	var err error
 	var fds []fs.DirEntry
+	var srcfile fs.File
 	var srcinfo fs.FileInfo
 
-	if srcinfo, err = os.Stat(src); err != nil {
+	srcfile, _ = assets.Open(src)
+
+	if srcinfo, err = srcfile.Stat(); err != nil {
 		return err
 	}
 
@@ -65,11 +58,11 @@ func copyDir(src string, dst string) error {
 
 func copyFile(src, dst string) error {
 	var err error
-	var srcfd *os.File
+	var srcfd fs.File
 	var dstfd *os.File
 	var srcinfo os.FileInfo
 
-	if srcfd, err = os.Open(src); err != nil {
+	if srcfd, err = assets.Open(src); err != nil {
 		return err
 	}
 	defer srcfd.Close()
@@ -82,7 +75,7 @@ func copyFile(src, dst string) error {
 	if _, err = io.Copy(dstfd, srcfd); err != nil {
 		return err
 	}
-	if srcinfo, err = os.Stat(src); err != nil {
+	if srcinfo, err = srcfd.Stat(); err != nil {
 		return err
 	}
 	return os.Chmod(dst, srcinfo.Mode())

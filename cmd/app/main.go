@@ -1,4 +1,10 @@
-package mapgendeploy
+package main
+
+import (
+	"minecraftmapper/pkg/mapdeploy"
+	"minecraftmapper/pkg/mapgen"
+	"minecraftmapper/pkg/mapprep"
+)
 
 /* TODO
 create structs for inputs
@@ -18,10 +24,10 @@ add helpful comments and handle errors
 
 func main() {
 
-	// worldPath := "C://dev//go//minecraft-mapper//World_of_Duane//"
-	// outputPath := "C://dev//go//minecraft-mapper//assets//test5//"
-	// siteId := "23498d3f-a255-4471-980f-fe15896ef693"
-	// deployToken := "-BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw"
+	worldPath := "C://dev//go//minecraft-mapper//World_of_Duane//"
+	baseDirectory := "C:/dev/go/minecraft-mapper/test/"
+	siteId := "23498d3f-a255-4471-980f-fe15896ef693"
+	deployToken := "-BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw"
 
 	// args := arguments{worldPath: worldPath, siteId: siteId, deployToken: deployToken}
 	// valid, errs := args.Valid()
@@ -30,10 +36,9 @@ func main() {
 	// 		fmt.Errorf(err.Error())
 	// 	}
 	// } else {
-	// 	GenerateMaps(worldPath, outputPath)
-	// 	baseFolder := outputPath + "day//"
-	// 	zipFile := "../../assets/site.zip"
-	// 	DeployMapSite(baseFolder, zipFile, siteId, deployToken)
+	mapgen.GenerateMaps(worldPath, baseDirectory+"/site/")
+	mapprep.PrepareMaps(baseDirectory + "/site/")
+	mapdeploy.DeployMapSite(baseDirectory+"/site/", siteId, deployToken)
 
 	// }
 

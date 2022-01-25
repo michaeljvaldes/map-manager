@@ -1,10 +1,14 @@
 package main
 
+import (
+	"minecraftmapper/pkg/mapgen"
+)
+
 func main() {
 
 	worldPath := "C://dev//go//minecraft-mapper//World_of_Duane//"
 	outputPath := "C://dev//go//minecraft-mapper//test//site//"
-	GenerateMaps(worldPath, outputPath)
+	mapgen.GenerateMaps(worldPath, outputPath)
 	// DeleteMapsDirectory(outputPath)
 }
 

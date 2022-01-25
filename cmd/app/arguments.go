@@ -1,4 +1,4 @@
-package mapgendeploy
+package main
 
 type arguments struct {
 	worldPath   string

@@ -1,4 +1,4 @@
-package main
+package mapdeploy
 
 import (
 	"fmt"
@@ -6,7 +6,9 @@ import (
 	"os"
 )
 
-func DeployMapSite(zipFile string, siteId string, deployToken string) {
+func DeployMapSite(baseDirectory string, siteId string, deployToken string) {
+	zipFile := baseDirectory + "../site.zip"
+	ZipFolder(baseDirectory, zipFile)
 	deployZipToSite(zipFile, siteId, deployToken)
 }
 
