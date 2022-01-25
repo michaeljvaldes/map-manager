@@ -4,10 +4,8 @@ func main() {
 
 	worldPath := "C://dev//go//minecraft-mapper//World_of_Duane//"
 	outputPath := "C://dev//go//minecraft-mapper//assets//test5//"
-	dimension := Overworld
-	night := false
-	generateMap(worldPath, outputPath, dimension, night)
-
+	GenerateMaps(worldPath, outputPath)
+	// DeleteMapsDirectory(outputPath)
 }
 
 /*
