@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"syscall"
 )
 
-func GenerateMaps(worldPath string, outputPath string) {
+func GenerateMaps(worldPath string, siteDir string) {
 	for _, mapConfig := range getAllMapConfigs() {
-		generateMap(worldPath, outputPath, mapConfig)
+		generateMap(worldPath, siteDir, mapConfig)
 	}
 }
 
-func generateMap(worldPath string, outputPath string, mapConfig MapConfig) {
-	command := buildCommand(worldPath, outputPath, mapConfig)
+func generateMap(worldPath string, siteDir string, mapConfig MapConfig) {
+	mapDir := filepath.Join(siteDir, mapConfig.Name)
+	command := buildCommand(worldPath, mapDir, mapConfig)
 	fmt.Printf("Command: %q\n", command.String())
 	executeCommand(command)
 }
@@ -29,20 +32,33 @@ func executeCommand(command *exec.Cmd) {
 	}
 }
 
-func buildCommand(worldPath string, outputPath string, mapConfig MapConfig) *exec.Cmd {
-	path := "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe"
-	worldArg := fmt.Sprintf(`--world="%s"`, worldPath)
-	outputArg := fmt.Sprintf(`--output="%s"`, outputPath+"//"+mapConfig.Name+"//")
-	dimensionArg := fmt.Sprintf(`--dimension=%s`, mapConfig.Dimension.toString())
-	nightArg := fmt.Sprintf(`--night=%s`, strconv.FormatBool(mapConfig.Night))
+func buildCommand(worldPath string, mapDir string, mapConfig MapConfig) *exec.Cmd {
+	unminedPath := "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe"
+	args := buildArgs(worldPath, mapDir, mapConfig)
+	commandString := unminedPath
+	commandString += " " + strings.Join(args, " ")
 
-	commandString := fmt.Sprintf(`%s web render %s %s %s %s`, path, worldArg, outputArg, dimensionArg, nightArg)
-	command := exec.Command(path)
+	command := exec.Command(unminedPath)
 	command.SysProcAttr = &syscall.SysProcAttr{}
 	command.SysProcAttr.CmdLine = commandString
 	return command
 }
 
-func DeleteMapsDirectory(mapDirectory string) {
-	os.RemoveAll(mapDirectory)
+func buildArgs(worldPath string, mapDir string, mapConfig MapConfig) []string {
+	webArg := "web"
+	renderArg := "render"
+	worldArg := buildStringArg("world", worldPath)
+	outputArg := buildStringArg("output", mapDir)
+	dimensionArg := buildStringArg("dimension", mapConfig.Dimension.toString())
+	nightArg := buildBoolArg("night", mapConfig.Night)
+	return []string{webArg, renderArg, worldArg, outputArg, dimensionArg, nightArg}
+}
+
+func buildStringArg(key, value string) string {
+	return fmt.Sprintf(`--%s="%s"`, key, value)
+}
+
+func buildBoolArg(key string, value bool) string {
+	valueStr := strconv.FormatBool(value)
+	return fmt.Sprintf(`--%s=%s`, key, valueStr)
 }
