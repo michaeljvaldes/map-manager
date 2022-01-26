@@ -12,17 +12,17 @@ import (
 
 func GenerateMaps(unminedPath string, worldPath string, siteDir string) {
 	log.Println("Generating maps for world: " + worldPath)
-	for _, mapConfig := range getAllMapConfigs() {
-		generateMap(unminedPath, worldPath, siteDir, mapConfig)
+	for _, mapState := range getAllMapStates() {
+		generateMap(unminedPath, worldPath, siteDir, mapState)
 	}
 	log.Println("Finished generating maps for world: " + worldPath)
 
 }
 
-func generateMap(unminedPath string, worldPath string, siteDir string, mapConfig MapConfig) {
-	log.Println("Generating map for dimension: " + mapConfig.Name)
-	mapDir := filepath.Join(siteDir, mapConfig.Name)
-	command := buildCommand(unminedPath, worldPath, mapDir, mapConfig)
+func generateMap(unminedPath string, worldPath string, siteDir string, mapState MapState) {
+	log.Println("Generating map for dimension: " + mapState.Name)
+	mapDir := filepath.Join(siteDir, mapState.Name)
+	command := buildCommand(unminedPath, worldPath, mapDir, mapState)
 	executeCommand(command)
 }
 
@@ -34,8 +34,8 @@ func executeCommand(command *exec.Cmd) {
 	}
 }
 
-func buildCommand(unminedPath string, worldPath string, mapDir string, mapConfig MapConfig) *exec.Cmd {
-	args := buildArgs(worldPath, mapDir, mapConfig)
+func buildCommand(unminedPath string, worldPath string, mapDir string, mapState MapState) *exec.Cmd {
+	args := buildArgs(worldPath, mapDir, mapState)
 	commandString := unminedPath
 	commandString += " " + strings.Join(args, " ")
 
@@ -45,13 +45,13 @@ func buildCommand(unminedPath string, worldPath string, mapDir string, mapConfig
 	return command
 }
 
-func buildArgs(worldPath string, mapDir string, mapConfig MapConfig) []string {
+func buildArgs(worldPath string, mapDir string, mapState MapState) []string {
 	webArg := "web"
 	renderArg := "render"
 	worldArg := buildStringArg("world", worldPath)
 	outputArg := buildStringArg("output", mapDir)
-	dimensionArg := buildStringArg("dimension", mapConfig.Dimension.toString())
-	nightArg := buildBoolArg("night", mapConfig.Night)
+	dimensionArg := buildStringArg("dimension", mapState.Dimension.toString())
+	nightArg := buildBoolArg("night", mapState.Night)
 	return []string{webArg, renderArg, worldArg, outputArg, dimensionArg, nightArg}
 }
 

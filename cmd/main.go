@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"minecraftmapper/internal/args"
+	"minecraftmapper/internal/config"
 	"minecraftmapper/internal/mapdeploy"
 	"minecraftmapper/internal/mapgen"
 	"minecraftmapper/internal/mapprep"
@@ -34,19 +34,20 @@ add helpful comments and handle errors
 // curl -H "Authorization: Bearer -BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw" https://api.netlify.com/api/v1/sites/23498d3f-a255-4471-980f-fe15896ef693/files
 func main() {
 
-	var arguments args.Arguments
-	useTestData := true
+	var configuration config.Config
+	useTestData := false
 	if useTestData {
-		arguments = getTestData()
+		configuration = getTestData()
 	} else {
-		arguments = args.BuildArgsFromPrompt()
+		configuration = config.BuildConfigFromFile("C:/dev/go/minecraft-mapper/test/config/sample_config.yml")
 	}
 
-	genPrepAndDeployOnSchedule(arguments)
+	genPrepAndDeployOnSchedule(configuration)
 }
 
-func genPrepAndDeployOnSchedule(args args.Arguments) {
-	gocron.Every(uint64(args.Period.Minutes())).Minutes().From(&args.StartTime).Do(genPrepAndDeploy, args.UnminedPath, args.WorldPath, args.SiteId, args.DeployToken, args.Period)
+func genPrepAndDeployOnSchedule(configuration config.Config) {
+	log.Printf("Starting first map cycle at " + configuration.StartTime.String())
+	gocron.Every(uint64(configuration.Period.Minutes())).Minutes().From(&configuration.StartTime).Do(genPrepAndDeploy, configuration.UnminedPath, configuration.WorldPath, configuration.SiteId, configuration.DeployToken, configuration.Period)
 	<-gocron.Start()
 }
 
@@ -75,10 +76,10 @@ func createTempDir() string {
 	return tempDir
 }
 
-func getTestData() args.Arguments {
-	return args.Arguments{
+func getTestData() config.Config {
+	return config.Config{
 		UnminedPath: "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe",
-		WorldPath:   filepath.Clean(filepath.FromSlash("C:/dev/go/minecraft-mapper/World_of_Duane/")),
+		WorldPath:   filepath.Clean(filepath.FromSlash("C:/dev/go/minecraft-mapper/test/sample_map/World_of_Duane/")),
 		SiteId:      "23498d3f-a255-4471-980f-fe15896ef693",
 		DeployToken: "-BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw",
 		Period:      time.Minute,

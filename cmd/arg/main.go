@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	args := args.BuildArgsFromPromt()
+	args := args.BuildArgsFromPrompt()
 	fmt.Println(args)
 }
