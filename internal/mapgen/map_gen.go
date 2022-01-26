@@ -10,15 +10,15 @@ import (
 	"syscall"
 )
 
-func GenerateMaps(worldPath string, siteDir string) {
+func GenerateMaps(unminedPath string, worldPath string, siteDir string) {
 	for _, mapConfig := range getAllMapConfigs() {
-		generateMap(worldPath, siteDir, mapConfig)
+		generateMap(unminedPath, worldPath, siteDir, mapConfig)
 	}
 }
 
-func generateMap(worldPath string, siteDir string, mapConfig MapConfig) {
+func generateMap(unminedPath string, worldPath string, siteDir string, mapConfig MapConfig) {
 	mapDir := filepath.Join(siteDir, mapConfig.Name)
-	command := buildCommand(worldPath, mapDir, mapConfig)
+	command := buildCommand(unminedPath, worldPath, mapDir, mapConfig)
 	fmt.Printf("Command: %q\n", command.String())
 	executeCommand(command)
 }
@@ -32,8 +32,7 @@ func executeCommand(command *exec.Cmd) {
 	}
 }
 
-func buildCommand(worldPath string, mapDir string, mapConfig MapConfig) *exec.Cmd {
-	unminedPath := "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe"
+func buildCommand(unminedPath string, worldPath string, mapDir string, mapConfig MapConfig) *exec.Cmd {
 	args := buildArgs(worldPath, mapDir, mapConfig)
 	commandString := unminedPath
 	commandString += " " + strings.Join(args, " ")
