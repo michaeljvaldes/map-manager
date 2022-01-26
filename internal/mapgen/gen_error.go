@@ -2,7 +2,7 @@ package mapgen
 
 import "fmt"
 
-const defaultMessage = "Error generating maps"
+const defaultMessage = "error generating maps"
 
 type GenError struct {
 	Err     error

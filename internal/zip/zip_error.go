@@ -2,7 +2,7 @@ package zip
 
 import "fmt"
 
-const defaultMessage = "Error creating zip file"
+const defaultMessage = "error creating zip file"
 
 type ZipError struct {
 	Err     error

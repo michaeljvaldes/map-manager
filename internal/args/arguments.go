@@ -1,17 +1,17 @@
-package arguments
+package args
 
 import "time"
 
-type arguments struct {
-	unminedPath string
-	worldPath   string
-	siteId      string
-	deployToken string
-	period      time.Duration
-	startTime   time.Time
+type Arguments struct {
+	UnminedPath string
+	WorldPath   string
+	SiteId      string
+	DeployToken string
+	Period      time.Duration
+	StartTime   time.Time
 }
 
-func (a arguments) Valid() (bool, []error) {
+func (a Arguments) Valid() (bool, []error) {
 	errors := []error{}
 	valid, err := a.validWorldPath()
 	if !valid {
@@ -33,14 +33,14 @@ func (a arguments) Valid() (bool, []error) {
 	}
 }
 
-func (a arguments) validWorldPath() (bool, error) {
+func (a Arguments) validWorldPath() (bool, error) {
 	return true, nil
 }
 
-func (a arguments) validSiteId() (bool, error) {
+func (a Arguments) validSiteId() (bool, error) {
 	return true, nil
 }
 
-func (a arguments) validDeployToken() (bool, error) {
+func (a Arguments) validDeployToken() (bool, error) {
 	return true, nil
 }

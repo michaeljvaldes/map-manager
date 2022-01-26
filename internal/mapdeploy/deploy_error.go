@@ -2,7 +2,7 @@ package mapdeploy
 
 import "fmt"
 
-const defaultMessage = "Error deploying site"
+const defaultMessage = "error deploying site"
 
 type DeployError struct {
 	Err     error

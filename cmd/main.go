@@ -1,10 +1,10 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"minecraftmapper/internal/args"
 	"minecraftmapper/internal/mapdeploy"
 	"minecraftmapper/internal/mapgen"
 	"minecraftmapper/internal/mapprep"
@@ -33,32 +33,21 @@ add helpful comments and handle errors
 
 // curl -H "Authorization: Bearer -BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw" https://api.netlify.com/api/v1/sites/23498d3f-a255-4471-980f-fe15896ef693/files
 func main() {
-	var (
-		name = flag.String("name", "John", "Enter your name.")
-		ip   = flag.Int("ip", 12345, "What is your ip?")
-	)
-	flag.Parse()
 
-	fmt.Println("name:", *name)
-	fmt.Println("ip:", *ip)
-	unminedPath := "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe"
-	worldPath := filepath.Clean(filepath.FromSlash("C:/dev/go/minecraft-mapper/World_of_Duane/"))
-	siteId := "23498d3f-a255-4471-980f-fe15896ef693"
-	deployToken := "-BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw"
-	startTime := time.Now().Add(time.Minute)
-	period := time.Minute
+	var arguments args.Arguments
+	useTestData := true
+	if useTestData {
+		arguments = getTestData()
+	} else {
+		arguments = args.BuildArgsFromPrompt()
+	}
 
-	gocron.Every(uint64(period.Minutes())).Minutes().From(&startTime).Do(genPrepAndDeploy, unminedPath, worldPath, siteId, deployToken, period)
+	genPrepAndDeployOnSchedule(arguments)
+}
+
+func genPrepAndDeployOnSchedule(args args.Arguments) {
+	gocron.Every(uint64(args.Period.Minutes())).Minutes().From(&args.StartTime).Do(genPrepAndDeploy, args.UnminedPath, args.WorldPath, args.SiteId, args.DeployToken, args.Period)
 	<-gocron.Start()
-	// args := arguments{worldPath: worldPath, siteId: siteId, deployToken: deployToken}
-	// valid, errs := args.Valid()
-	// if !valid {
-	// 	for _, err := range errs {
-	// 		fmt.Errorf(err.Error())
-	// 	}
-	// } else {
-
-	// }
 }
 
 func genPrepAndDeploy(unminedPath, worldPath, siteId, deployToken string, period time.Duration) {
@@ -84,4 +73,15 @@ func createTempDir() string {
 	}
 	tempDir = filepath.Clean(tempDir)
 	return tempDir
+}
+
+func getTestData() args.Arguments {
+	return args.Arguments{
+		UnminedPath: "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe",
+		WorldPath:   filepath.Clean(filepath.FromSlash("C:/dev/go/minecraft-mapper/World_of_Duane/")),
+		SiteId:      "23498d3f-a255-4471-980f-fe15896ef693",
+		DeployToken: "-BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw",
+		Period:      time.Minute,
+		StartTime:   time.Now().Add(time.Minute),
+	}
 }

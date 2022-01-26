@@ -2,7 +2,7 @@ package mapprep
 
 import "fmt"
 
-const defaultMessage = "Error creating site for map"
+const defaultMessage = "error creating site for map"
 
 type PrepError struct {
 	Err     error
