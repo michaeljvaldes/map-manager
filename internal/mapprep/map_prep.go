@@ -2,9 +2,9 @@ package mapprep
 
 import (
 	"embed"
-	"fmt"
 	"io"
 	"io/fs"
+	"log"
 	"os"
 	"path"
 )
@@ -13,14 +13,12 @@ import (
 var assets embed.FS
 
 func PrepareMaps(baseDirectory string) {
-	copyAssets(baseDirectory)
+	log.Println("Creating maps site for deployment")
+	copyDir("assets", baseDirectory)
+	log.Println("Finished creating maps site for deployment")
 }
 
-func copyAssets(baseDirectory string) error {
-	return copyDir("assets", baseDirectory)
-}
-
-func copyDir(src string, dst string) error {
+func copyDir(src string, dst string) {
 	var err error
 	var fds []fs.DirEntry
 	var srcfile fs.File
@@ -29,54 +27,58 @@ func copyDir(src string, dst string) error {
 	srcfile, _ = assets.Open(src)
 
 	if srcinfo, err = srcfile.Stat(); err != nil {
-		return err
+		handleError(err, "Error getting info for src file")
 	}
 
 	if err = os.MkdirAll(dst, srcinfo.Mode()); err != nil {
-		return err
+		handleError(err, "Error making directory")
 	}
 
 	if fds, err = assets.ReadDir(src); err != nil {
-		return err
+		handleError(err, "Error reading src directory")
 	}
 	for _, fd := range fds {
 		srcfp := path.Join(src, fd.Name())
 		dstfp := path.Join(dst, fd.Name())
 
 		if fd.IsDir() {
-			if err = copyDir(srcfp, dstfp); err != nil {
-				fmt.Println(err)
-			}
+			copyDir(srcfp, dstfp)
 		} else {
-			if err = copyFile(srcfp, dstfp); err != nil {
-				fmt.Println(err)
-			}
+			copyFile(srcfp, dstfp)
 		}
 	}
-	return nil
 }
 
-func copyFile(src, dst string) error {
+func copyFile(src, dst string) {
 	var err error
 	var srcfd fs.File
 	var dstfd *os.File
 	var srcinfo os.FileInfo
 
 	if srcfd, err = assets.Open(src); err != nil {
-		return err
+		handleError(err, "Error opening asset "+src)
 	}
 	defer srcfd.Close()
 
 	if dstfd, err = os.Create(dst); err != nil {
-		return err
+		handleError(err, "Error creating dst file")
 	}
 	defer dstfd.Close()
 
 	if _, err = io.Copy(dstfd, srcfd); err != nil {
-		return err
+		handleError(err, "Error copying src file to dst file")
 	}
 	if srcinfo, err = srcfd.Stat(); err != nil {
-		return err
+		handleError(err, "Error getting info for src file ")
 	}
-	return os.Chmod(dst, srcinfo.Mode())
+
+	err = os.Chmod(dst, srcinfo.Mode())
+	if err != nil {
+		handleError(err, "Error changing mode of dst file")
+	}
+}
+
+func handleError(err error, context string) {
+	prepErr := PrepError{Err: err, Context: context}
+	log.Fatal(prepErr.ErrorMessage())
 }

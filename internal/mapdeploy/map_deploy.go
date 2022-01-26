@@ -2,25 +2,29 @@ package mapdeploy
 
 import (
 	"fmt"
+	"log"
+	"minecraftmapper/internal/zip"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 const apiUrlPattern string = "https://api.netlify.com/api/v1/sites/%s/deploys"
 
 func DeployMapSite(siteDir string, siteId string, deployToken string) {
+	log.Println("Deploying site to site id: " + siteId)
 	zipFileName := "site.zip"
 	zipFilePath := filepath.Join(filepath.Dir(siteDir), zipFileName)
-	ZipDirectory(siteDir, zipFilePath)
-	// zipFilePath = "C:/dev/go/minecraft-mapper/test/site.zip"
+	zip.ZipDirectory(siteDir, zipFilePath)
 	deployZipToSite(zipFilePath, siteId, deployToken)
+	log.Println("Finished deploying site to site id: " + siteId)
 }
 
 func deployZipToSite(zipFilePath string, siteId string, deployToken string) {
 	zipFile, err := os.Open(zipFilePath)
 	if err != nil {
-		fmt.Println(err)
+		handleError(err, "Error opening site zip")
 	}
 	defer zipFile.Close()
 
@@ -28,7 +32,7 @@ func deployZipToSite(zipFilePath string, siteId string, deployToken string) {
 
 	request, err := http.NewRequest(http.MethodPost, url, zipFile)
 	if err != nil {
-		fmt.Println(err)
+		handleError(err, "Error creating deploy request")
 	}
 
 	request.Header.Add("Authorization", "Bearer "+deployToken)
@@ -37,14 +41,14 @@ func deployZipToSite(zipFilePath string, siteId string, deployToken string) {
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
-		fmt.Println(err)
+		handleError(err, "Error executing deployment post request")
 	}
-	fmt.Println("Response:", response)
-
+	if response.StatusCode != http.StatusOK {
+		handleError(nil, "Error executing deployment post request; Response Code = "+strconv.Itoa(response.StatusCode))
+	}
 }
 
-/*
-curl -X POST https://api.netlify.com/api/v1/sites/23498d3f-a255-4471-980f-fe15896ef693/deploys -H "Authorization: Bearer -BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw" -H "Content-Type: application/zip" --data-binary @site.zip
-
-fc.exe /b "C:\dev\go\minecraft-mapper\test" "C:\Users\micha\AppData\Local\Temp\map_temp_dir2936816216\site.zip"
-*/
+func handleError(err error, context string) {
+	deployErr := DeployError{Err: err, Context: context}
+	log.Fatal(deployErr.ErrorMessage())
+}

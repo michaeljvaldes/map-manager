@@ -2,7 +2,7 @@ package mapgen
 
 import (
 	"fmt"
-	"os"
+	"log"
 	"os/exec"
 	"path/filepath"
 	"strconv"
@@ -11,24 +11,26 @@ import (
 )
 
 func GenerateMaps(unminedPath string, worldPath string, siteDir string) {
+	log.Println("Generating maps for world: " + worldPath)
 	for _, mapConfig := range getAllMapConfigs() {
 		generateMap(unminedPath, worldPath, siteDir, mapConfig)
 	}
+	log.Println("Finished generating maps for world: " + worldPath)
+
 }
 
 func generateMap(unminedPath string, worldPath string, siteDir string, mapConfig MapConfig) {
+	log.Println("Generating map for dimension: " + mapConfig.Name)
 	mapDir := filepath.Join(siteDir, mapConfig.Name)
 	command := buildCommand(unminedPath, worldPath, mapDir, mapConfig)
-	fmt.Printf("Command: %q\n", command.String())
 	executeCommand(command)
 }
 
 func executeCommand(command *exec.Cmd) {
-	command.Stdout = os.Stdout
-	command.Stderr = os.Stderr
 	err := command.Run()
 	if err != nil {
-		fmt.Println("Error: " + err.Error())
+		genErr := GenError{Err: err, Context: "Error executing unmined-cli command"}
+		log.Fatal(genErr.ErrorMessage())
 	}
 }
 

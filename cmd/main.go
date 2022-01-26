@@ -1,8 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"minecraftmapper/internal/mapdeploy"
 	"minecraftmapper/internal/mapgen"
 	"minecraftmapper/internal/mapprep"
@@ -31,17 +33,22 @@ add helpful comments and handle errors
 
 // curl -H "Authorization: Bearer -BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw" https://api.netlify.com/api/v1/sites/23498d3f-a255-4471-980f-fe15896ef693/files
 func main() {
+	var (
+		name = flag.String("name", "John", "Enter your name.")
+		ip   = flag.Int("ip", 12345, "What is your ip?")
+	)
+	flag.Parse()
 
+	fmt.Println("name:", *name)
+	fmt.Println("ip:", *ip)
 	unminedPath := "C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe"
 	worldPath := filepath.Clean(filepath.FromSlash("C:/dev/go/minecraft-mapper/World_of_Duane/"))
-	tempDir := createTempDir()
-	defer os.RemoveAll(tempDir)
-	siteDir := filepath.Join(tempDir, "site")
 	siteId := "23498d3f-a255-4471-980f-fe15896ef693"
 	deployToken := "-BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw"
-	time := 1
+	startTime := time.Now().Add(time.Minute)
+	period := time.Minute
 
-	gocron.Every(uint64(time)).Minutes().Do(genPrepAndDeploy, unminedPath, worldPath, siteDir, siteId, deployToken)
+	gocron.Every(uint64(period.Minutes())).Minutes().From(&startTime).Do(genPrepAndDeploy, unminedPath, worldPath, siteId, deployToken, period)
 	<-gocron.Start()
 	// args := arguments{worldPath: worldPath, siteId: siteId, deployToken: deployToken}
 	// valid, errs := args.Valid()
@@ -52,14 +59,22 @@ func main() {
 	// } else {
 
 	// }
-
 }
 
-func genPrepAndDeploy(unminedPath, worldPath, siteDir, siteId, deployToken string) {
-	fmt.Println(time.Now())
+func genPrepAndDeploy(unminedPath, worldPath, siteId, deployToken string, period time.Duration) {
+	startTime := time.Now()
+	log.Println("Restarting map cycle: current time " + startTime.String())
+
+	tempDir := createTempDir()
+	defer os.RemoveAll(tempDir)
+	siteDir := filepath.Join(tempDir, "site")
+
 	mapgen.GenerateMaps(unminedPath, worldPath, siteDir)
 	mapprep.PrepareMaps(siteDir)
 	mapdeploy.DeployMapSite(siteDir, siteId, deployToken)
+
+	log.Println("Map cycle complete: current time " + time.Now().String())
+	log.Println("Beginning next map cycle at approximately " + startTime.Add(period).String())
 }
 
 func createTempDir() string {

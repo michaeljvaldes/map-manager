@@ -1,15 +1,14 @@
-package main
+package arguments
 
 import "time"
 
 type arguments struct {
 	unminedPath string
 	worldPath   string
-	siteDir     string
 	siteId      string
 	deployToken string
 	period      time.Duration
-	start       time.Time
+	startTime   time.Time
 }
 
 func (a arguments) Valid() (bool, []error) {
