@@ -18,9 +18,9 @@ siteId:
 # deployToken: 8gz7O_nJzYbnx23wDzNwmYF-AQEsPPs85aIuo_-krjU
 deployToken:
 
-# Period : the frequency with which you want to generate and deploy your map; in the format HH:mm (hours, minutes)
-# e.g. (every 2 hours and 30 minutes)
-# period: 02:30
+# Period : the frequency with which you want to generate and deploy your map, in hours
+# e.g. (every 2 hours)
+# period: 2
 period:
 
 # Start Time: the time of day you want to start the first map generation and deployment; in the format HH:mm (hours, minutes)

@@ -17,11 +17,11 @@ import (
 
 func ExecuteMapCycleOnSchedule(configuration config.Config) {
 	log.Printf("Starting first map cycle at " + configuration.StartTime.String())
-	gocron.Every(uint64(configuration.Period.Minutes())).Minutes().From(&configuration.StartTime).Do(executeMapCycle, configuration.UnminedPath, configuration.WorldPath, configuration.SiteId, configuration.DeployToken, configuration.Period)
+	gocron.Every(uint64(configuration.Period)).Hours().From(&configuration.StartTime).Do(executeMapCycle, configuration.UnminedPath, configuration.WorldPath, configuration.SiteId, configuration.DeployToken, configuration.Period)
 	<-gocron.Start()
 }
 
-func executeMapCycle(unminedPath, worldPath, siteId, deployToken string, period time.Duration) {
+func executeMapCycle(unminedPath, worldPath, siteId, deployToken string, period int) {
 	startTime := time.Now()
 	log.Println("Restarting map cycle: current time " + startTime.String())
 
@@ -34,7 +34,7 @@ func executeMapCycle(unminedPath, worldPath, siteId, deployToken string, period 
 	mapdeploy.DeployMapSite(siteDir, siteId, deployToken)
 
 	log.Println("Map cycle complete: current time " + time.Now().String())
-	log.Println("Beginning next map cycle at approximately " + startTime.Add(period).String())
+	log.Println("Beginning next map cycle at approximately " + startTime.Add(time.Hour*time.Duration(period)).String())
 }
 
 func createTempDir() string {

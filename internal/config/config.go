@@ -11,7 +11,7 @@ type Config struct {
 	WorldPath   string
 	SiteId      string
 	DeployToken string
-	Period      time.Duration
+	Period      int
 	StartTime   time.Time
 }
 
@@ -20,6 +20,6 @@ type YmlConfig struct {
 	WorldPath   string
 	SiteId      string
 	DeployToken string
-	Period      string
+	Period      int
 	StartTime   string
 }

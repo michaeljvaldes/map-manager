@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -13,8 +14,8 @@ import (
 const apiUrlPattern string = "https://api.netlify.com/api/v1/sites/%s"
 
 func GetSite(siteId, deployToken string) error {
-	url := fmt.Sprintf(apiUrlPattern, siteId)
-	request := buildRequest(http.MethodGet, url, nil, deployToken)
+	uri, _ := url.Parse(fmt.Sprintf(apiUrlPattern, siteId))
+	request := buildRequest(http.MethodGet, uri.String(), nil, deployToken)
 	return sendRequest(request)
 }
 
@@ -25,15 +26,17 @@ func PostDeploy(siteId, deployToken, zipFilePath string) error {
 	}
 	defer zipFile.Close()
 
-	url := path.Join(fmt.Sprintf(apiUrlPattern, siteId), "deploys")
-	request := buildRequest(http.MethodPost, url, zipFile, deployToken)
+	// url := path.Join(fmt.Sprintf(apiUrlPattern, siteId), "deploys")
+	uri, _ := url.Parse(fmt.Sprintf(apiUrlPattern, siteId))
+	uri.Path = path.Join(uri.Path, "deploys")
+	request := buildRequest(http.MethodPost, uri.String(), zipFile, deployToken)
 	request.Header.Add("Content-Type", "application/zip")
 
 	return sendRequest(request)
 }
 
-func buildRequest(httpMethod string, url string, body io.Reader, deployToken string) *http.Request {
-	request, err := http.NewRequest(httpMethod, url, body)
+func buildRequest(httpMethod string, uri string, body io.Reader, deployToken string) *http.Request {
+	request, err := http.NewRequest(httpMethod, uri, body)
 	if err != nil {
 		handleError(err, "Error creating deploy request")
 	}

@@ -57,13 +57,12 @@ func sanitizeSiteIdAndDeployToken(siteId string, deployToken string) (string, st
 	return sanitizedSiteId, sanitizedDeployToken
 }
 
-func sanitizePeriod(period string) time.Duration {
+func sanitizePeriod(period int) int {
 	errMsg := "invalid period for map generation/deployment"
-	sanitized, err := parseHoursMinutes(period)
-	if err != nil {
-		handleError(err, errMsg)
+	if period <= 0 {
+		handleError(errors.New(errMsg), "")
 	}
-	return sanitized
+	return period
 }
 
 func sanitizeStartTime(startTime string) time.Time {

@@ -1,6 +1,7 @@
 unminedPath: C:/dev/go/minecraft-mapper/third_party/unmined/unmined-cli.exe
-worldPath: C:/dev/go/minecraft-mapper/test/sample_map/World_of_Duane/
+# worldPath: E:\micha\Downloads\HempHill
+worldPath: C:\dev\go\minecraft-mapper\test\sample_map\World_of_Duane
 siteId: 23498d3f-a255-4471-980f-fe15896ef693
 deployToken: -BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw
-period: 00:01
+period: 2
 startTime: 16:55

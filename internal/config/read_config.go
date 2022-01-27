@@ -25,8 +25,7 @@ func BuildConfigFromFile(configFilePath string) Config {
 	}
 
 	// Set undefined variables
-	viper.SetDefault("period", "24:00")
-	viper.SetDefault("period", "24:00")
+	viper.SetDefault("period", 24)
 
 	err := viper.Unmarshal(&ymlConfig)
 	if err != nil {
