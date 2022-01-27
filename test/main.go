@@ -1,8 +1,8 @@
 package main
 
 import (
-	"minecraftmapper/internal/config"
-	"minecraftmapper/internal/mapcycle"
+	"mapmanager/internal/config"
+	"mapmanager/internal/mapcycle"
 	"time"
 )
 

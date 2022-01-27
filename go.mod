@@ -1,4 +1,4 @@
-module minecraftmapper
+module mapmanager
 
 go 1.17
 

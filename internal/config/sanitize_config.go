@@ -63,6 +63,10 @@ func sanitizePeriod(period string) time.Duration {
 }
 
 func sanitizeStartTime(startTime string) time.Time {
+	if startTime == "now" {
+		return time.Now().Add(time.Minute)
+	}
+
 	errMsg := "invalid start time for map generation/deployment"
 	dur, err := parseHoursMinutes(startTime)
 	if err != nil {

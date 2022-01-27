@@ -3,7 +3,7 @@ package mapdeploy
 import (
 	"fmt"
 	"log"
-	"minecraftmapper/internal/zip"
+	"mapmanager/internal/zip"
 	"net/http"
 	"os"
 	"path/filepath"

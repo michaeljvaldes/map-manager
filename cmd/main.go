@@ -1,8 +1,11 @@
 package main
 
 import (
-	"minecraftmapper/internal/config"
-	"minecraftmapper/internal/mapcycle"
+	"log"
+	"mapmanager/internal/config"
+	"mapmanager/internal/mapcycle"
+	"os"
+	"path/filepath"
 )
 
 /* TODO
@@ -21,8 +24,12 @@ add args to choose between gen, deploy, both, and both at a frequency
 add helpful comments and handle errors
 */
 
-// curl -H "Authorization: Bearer -BWqwl7FipqgTcJmzKl-GbDqwNIcFXAR853qg1itMVw" https://api.netlify.com/api/v1/sites/23498d3f-a255-4471-980f-fe15896ef693/files
 func main() {
-	configuration := config.BuildConfigFromFile("C:/dev/go/minecraft-mapper/test/config/sample_config.yml")
+	exePath, err := os.Executable()
+	if err != nil {
+		log.Fatal("Cannot get path of current directory", err)
+	}
+	configFilePath := filepath.Join(filepath.Dir(exePath), config.DefaultConfigName)
+	configuration := config.BuildConfigFromFile(configFilePath)
 	mapcycle.ExecuteMapCycleOnSchedule(configuration)
 }

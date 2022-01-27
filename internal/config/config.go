@@ -4,6 +4,8 @@ import (
 	"time"
 )
 
+const DefaultConfigName = "config.yml"
+
 type Config struct {
 	UnminedPath string
 	WorldPath   string

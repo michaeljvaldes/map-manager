@@ -1,0 +1,33 @@
+# Unmined Path: full absolute path to the unmined-cli.exe installed on your machine
+# ex/
+# unminedPath: C:/user/downloads/unmined-cli_0.18.7-dev_net6.0-win-64bit_sc/unmined-cli.exe
+unminedPath:
+
+# World Path: full absolute path to the directory of the target minecraft world on your machine
+# ex/
+# worldPath: C:/Users/user/AppData/Roaming/.minecraft/saves/World_Directory
+worldPath:
+
+# Site ID: API ID of your Netlify site, found on the site settings page
+# ex/
+# siteId: 23424d3f-af55-4xc1-980f-fe15af6ef693
+siteId:
+
+# Deploy Token: Personal access token of your Netlify account, generated on the "Applications" page in user settings
+# e.g. 
+# deployToken: 8gz7O_nJzYbnx23wDzNwmYF-AQEsPPs85aIuo_-krjU
+deployToken:
+
+# Period : the frequency with which you want to generate and deploy your map; in the format HH:mm (hours, minutes)
+# e.g. (every 2 hours and 30 minutes)
+# period: 02:30
+period:
+
+# Start Time: the time of day you want to start the first map generation and deployment; in the format HH:mm (hours, minutes)
+# If the start time is before the current time, the first deployment will occur at the start time tomorrow
+# e.g. (4:55 PM)
+# startTime: 16:55
+# Enter "now" if you want to start immediately
+# e.g. 
+# startTime: now
+startTime:
