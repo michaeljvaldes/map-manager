@@ -2,8 +2,8 @@ package mapdeploy
 
 import (
 	"log"
+	"mapmanager/internal/io/zip"
 	"mapmanager/internal/netlify"
-	"mapmanager/internal/zip"
 	"path/filepath"
 )
 
