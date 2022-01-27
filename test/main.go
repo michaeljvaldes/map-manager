@@ -15,7 +15,7 @@ func main() {
 func getTestConfig() config.Config {
 	testConfigPath := "config/sample_config.yml"
 	configuration := config.BuildConfigFromFile(testConfigPath)
-	configuration.Period = time.Minute
+	configuration.Period = time.Hour
 	configuration.StartTime = time.Now().Add(time.Minute)
 	return configuration
 }

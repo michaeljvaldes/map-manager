@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"log"
+	"mapmanager/internal/netlify"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -49,7 +50,10 @@ func sanitizeWorldPath(dirPath string) string {
 func sanitizeSiteIdAndDeployToken(siteId string, deployToken string) (string, string) {
 	sanitizedSiteId := strings.Trim(siteId, " ")
 	sanitizedDeployToken := strings.Trim(deployToken, " ")
-	// test with get request
+	err := netlify.GetSite(siteId, deployToken)
+	if err != nil {
+		handleError(err, "unable to authenticate with netlify; incorrect side ID or deploy token")
+	}
 	return sanitizedSiteId, sanitizedDeployToken
 }
 
