@@ -52,7 +52,19 @@ func buildArgs(worldPath string, mapDir string, mapState MapState) []string {
 	outputArg := buildStringArg("output", mapDir)
 	dimensionArg := buildStringArg("dimension", mapState.Dimension.toString())
 	nightArg := buildBoolArg("night", mapState.Night)
-	return []string{webArg, renderArg, worldArg, outputArg, dimensionArg, nightArg}
+	gndXRayArg := buildBoolArg("gndxray", mapState.GndXRay)
+
+	args := []string{webArg, renderArg, worldArg, outputArg, dimensionArg, nightArg, gndXRayArg}
+	args = append(args, buildOptionalArgs(mapState)...)
+	return args
+}
+
+func buildOptionalArgs(mapState MapState) []string {
+	optionalArgs := []string{}
+	if mapState.topY > 0 {
+		optionalArgs = append(optionalArgs, buildIntArg("topY", mapState.topY))
+	}
+	return optionalArgs
 }
 
 func buildStringArg(key, value string) string {
@@ -63,3 +75,9 @@ func buildBoolArg(key string, value bool) string {
 	valueStr := strconv.FormatBool(value)
 	return fmt.Sprintf(`--%s=%s`, key, valueStr)
 }
+
+func buildIntArg(key string, value int) string {
+	valueStr := strconv.Itoa(value)
+	return fmt.Sprintf(`--%s=%s`, key, valueStr)
+}
+
