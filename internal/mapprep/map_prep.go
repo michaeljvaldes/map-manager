@@ -12,7 +12,6 @@ import (
 var assets embed.FS
 
 const copyPath = "assets/copy"
-const templatePath = "assets/template"
 
 func PrepareMaps(baseDirectory string) {
 	log.Println("Creating maps site for deployment")
